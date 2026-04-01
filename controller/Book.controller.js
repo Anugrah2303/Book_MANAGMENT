@@ -37,7 +37,7 @@ export const FindBook = async (req, res) => {
 
 export const ShowBooks = async (req, res) => {
          try {
-        let { search, sortby = "price", sortorder = "asc" } = req.query;
+        let { search, sortby, sortorder } = req.query;
 
         let filter = {};
 
