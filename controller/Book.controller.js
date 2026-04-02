@@ -36,7 +36,7 @@ export const FindBook = async (req, res) => {
 }
 
 export const ShowBooks = async (req, res) => {
-         try {
+    try {
         let { search, sortby, sortorder } = req.query;
 
         let filter = {};
@@ -53,7 +53,7 @@ export const ShowBooks = async (req, res) => {
             [sortby]: sortorder === "asc" ? 1 : -1
         };
         const books = await BookSchema.find(filter).sort(sortOrder);
-        return res.json({message: "All Books Fetched",books});
+        return res.json({ message: "All Books Fetched", books });
     } catch (error) {
         console.log('Server Error', error)
     }
@@ -70,6 +70,16 @@ export const UpdateBook = async (req, res) => {
         if (!Book) {
             return res.json({ message: 'book not found!!!' })
         }
+
+        if (req.file) {
+            if (Book.bookImage) {
+                const imagePath = `.${Book.bookImage}`
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                }
+            }
+        }
+
         Book = await BookSchema.findByIdAndUpdate(id, {
             ...req.body,
             bookImage: imagePath
